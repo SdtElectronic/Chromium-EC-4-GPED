@@ -1,0 +1,26 @@
+<h1>1.4 其他资源</h1>
+    有关EC的绝大多数信息都可以在<a href = "https://www.chromium.org/chromium-os/ec-development">项目官网</a>上找到。第三方的一些文档附在了引言末的参考资料中。这里提供一些其他的可能有用的资源。
+<h2>源码仓库与镜像</h2>
+<ul>
+    <li><a href="https://chromium.googlesource.com/chromiumos/platform/ec">Google官方仓库</a></li>
+    <li><a href="https://github.com/coreboot/chrome-ec/blob/master/">github镜像</a></li>
+</ul>
+<h2>社区</h2>
+<ul>
+    <li>EC是Google内部的专门为chromebook开发的项目，自然不会有官方的讨论EC通用开发的社区</li>
+    <li>Google建立了两个群组供用户讨论chrome OS，<a href = "https://groups.google.com/a/chromium.org/forum/#!forum/chromium-os-reviews">这里</a>是严肃的特性请求和bug汇报群组；<a href="https://groups.google.com/a/chromium.org/forum/#!forum/chromium-os-discuss">这里</a>则是相对随意的genera discussion。两个群组似乎都没有多高的热度</li>
+    <li><a href = "https://bugs.chromium.org/p/chromium/issues/list?can=2&amp;q=component:OS%3EFirmware%20component:OS%3EFirmware%3EEC&amp;colspec=ID%20Pri%20M%20Stars%20ReleaseBlock%20Component%20Status%20Owner%20Summary%20OS%20Modified">这里</a>是发起issue的页面，不过比起community，它更像是一个bug tracker</li>
+    <li>综上所述，我们非常遗憾地得到结论，如果你在使用EC做通用开发时遇到问题，或有什么想要分享，并没有一个专门的社区供你讨论。</li>
+</ul>
+
+<h2>一些问题的polyfill</h2>
+<ul>
+    <li>
+        <h3>栈上的动态内存</h3>
+        如果迫不得已要使用动态内存，可以通过alloca()避开堆。alloca()在栈上分配空间，有更好的性能，但也有大小、生命周期等限制，不能完全替代malloc()。
+    </li>
+    <li>
+        <h3>Σ-Δ DAC</h3>
+        这个古怪的技巧允许你通过仅添加一个LPF就把一个数字输出变成一个有不错的SNR的DAC，若你实在需要DAC功能但又没有独立的IC时可以作为弥补。代价是会阻塞当前线程。
+    </li>
+</ul>
