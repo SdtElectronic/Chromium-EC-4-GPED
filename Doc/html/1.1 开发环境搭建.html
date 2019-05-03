@@ -3,17 +3,36 @@
 <h2>首先，你得有个Linux</h2>
     <ul>
         <li>毫不意外地，这样一个开源项目需要在Linux环境中构建；也同样毫不意外地，大概会有很多人直接被这个需求劝退（</li>
-        <li>在你因认为浪费了阅读前两节的时间而愤然准备右上角之前，也许可以考虑用<a href = "http://www.mingw.org/">MinGw</a>或者<a href= "https://docs.microsoft.com/en-us/windows/wsl/install-win10">WSL</a>抢救一下，因为编译只需要CLI就够了，至于会不会有兼容性等玄学问题，首先我并没有试过（</li>
+        <li>在你因认为浪费了阅读前两节的时间而愤然准备右上角之前，也许可以考虑用<a href = "http://www.mingw.org/">MinGw</a>或者<a href= "https://docs.microsoft.com/en-us/windows/wsl/install-win10">WSL</a>抢救一下，因为编译只需要CLI就够了，至于会不会有兼容性等玄学问题，首先我并没有试过.jpg（</li>
         <li>Google官方推荐的Linux版本是Ubuntu 15.10，我在Debian testing(4.20)上测试可以无问题工作</li>
         <li>当然在Linux上交叉编译少不了一堆的依赖，对于Debian这样初始比较纯净的系统更是如此。希望你对apt还比较熟悉以解决可能出现的玄学问题（</li>
     </ul>
 <h2>快速开始，最简开发环境</h2>
     <ul>
-
-        <li>如果你运气够好</li>
+        <li>本段指导你如何最快地准备好一个基础的开发环境，这个环境可以编译出绝大多数的EC二进制</li>
+        <li>首先执行以下指令安装必要的依赖</li>
+        <li>TIPS：若你还没有安装aptitude，可以把下面的<code>aptitude</code>全换成<code>apt-get</code>，或者<code>sudo apt-get install aptitude</code></li>
+        <li>TIPSx2：如果你使用的不是Debian系发行版，你当然没法使用apt包管理系统！<del>实际上我连其他发行版上是否有这些包都不太确定，所以只好请非Debian系发行版用户自求多福了</del></li>
+        <li><code>sudo aptitude update </code></li>
+        <li><code>sudo aptitude install git libftdi-dev libusb-dev libncurses5-dev gcc-arm-none-eabi</code></li>
+        <li><code>sudo aptitude install repo pkg-config gawk</code></li>
+        <li>当然由于环境差异，可能上面的命令不能修补所有必要的依赖。你可能需要根据错误输出来自己进行一些修补</li>
+        <li>你还需要一个coreboot-sdk来获得arm-eabi-gcc的支持，很可惜这个sdk只能通过执行下一段的操作得到</li>
+        <li>预料到读完上一行会让你暗骂我坑爹，所以我把自己配置好的coreboot-sdk打包成了zip，你可以从<a>这里</a>下载</li>
+        <li>解压出cross-sdk这个文件夹后，<code>sudo mv ./cross-sdk /opt</code>以将其移动到根文件系统的opt目录下</li>
+        <li>当然你还需要整个EC框架的源码，<del>除非你想虚空编译</del> 选一个你心仪的工程目录，然后<code>git clone https://github.com/coreboot/chrome-ec.git</code></li>
+        <li>如果你运气够好，进入刚刚clone下来的ec目录，执行<code>make BOARD=eve</code>，你会在执行时打印出的最后一行看到 ，而不是什么奇怪的报错</li>
+        <li>现在你可以在 下找到刚刚编译出来的二进制了，来之不易！然而这并没有什么卵用，你只是编译出了和你无关的代码而已</li>
+        <li>但为了让以后你写的真正有用的代码可以运行，你会一次次重复刚才的编译过程</li>
+        <li>顺带一提，在<code>make</code>指令后加上<code>-j$ </code>可以提高编译速度。例如你的cpu是4c8t的，你就可以骄傲地加一个-j8（</li>
     </ul>
-<h2>利用chroot完整构建EC</h2>
+<h2>利用chromiumOS chroot完整构建EC</h2>
     <ul>
+        <li>TIPS：除非</li>
         <li>写到这我发现第一段的标题得改成“首先你得懂Linux”</li>
         <li><del>为了防止这样会劝退更多的人我还是没去改（</del></li>
+        <li>TIPSx2：从零开始构建chromium chroot对于大多数人来说将会是漫长而煎熬，甚至根本无法完成的</li>
+        <li>TIPSx2continue：所以我也准备了一个<a>构建好的chroot</a>供你直接下载</li>
+        <li>TIPSx3：如果看到这里也不能阻止你执意自己构建chroot，那么原谅我给你最后一击：如果你不能肉身翻墙或者没有bash下也有效的全局代理，请直接放弃</li>
+        
     </ul>

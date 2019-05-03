@@ -61,7 +61,7 @@
         <li>由于不同型号的chromebook使用不同种类的EC控制器，EC固件需要进行跨平台适配</li>
         <li>EC巧妙设计的API允许用户只针对不同SoC做少量设定即可移植代码</li>
         <li>这些设定以宏定义的形式暴露给用户，包括系统时钟，FLASH和RAM大小等</li>
-        <li>每个平台的设定被写入独立的config文件中（，一般出现在\chip\${productLine}目录下，以config-${platform}.h命名，如\chip\stm32\config-stm32f05x.h）</li>
+        <li>每个平台的设定被写入独立的config文件中</li>
         <li>注意：本教程以STM32为平台</li>
     </ul>
 <h2>Why EC?</h2>
