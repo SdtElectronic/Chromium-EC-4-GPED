@@ -19,7 +19,7 @@
         <li>当然由于环境差异，可能上面的命令不能修补所有必要的依赖。你可能需要根据错误输出来自己进行一些修补</li>
         <li>你还需要一个coreboot-sdk来获得arm-eabi-gcc的支持，很可惜这个sdk只能通过执行下一段的操作得到</li>
         <li>预料到读完上一行会让你暗骂我坑爹，所以我把自己配置好的coreboot-sdk打包成了zip，你可以从<a>这里</a>下载</li>
-        <li>解压出cross-sdk这个文件夹后，<code>sudo mv ./cross-sdk /opt</code>以将其移动到根文件系统的opt目录下</li>
+        <li>解压得到cross-sdk这个文件夹后，<code>sudo mv ./cross-sdk /opt</code>以将其移动到根文件系统的opt目录下</li>
         <li>当然你还需要整个EC框架的源码，<del>除非你想虚空编译</del> 选一个你心仪的工程目录，然后<code>git clone https://github.com/coreboot/chrome-ec.git</code></li>
         <li>如果你运气够好，进入刚刚clone下来的ec目录，执行<code>make BOARD=eve</code>，你会在执行时打印出的最后一行看到 ，而不是什么奇怪的报错</li>
         <li>现在你可以在 下找到刚刚编译出来的二进制了，来之不易！然而这并没有什么卵用，你只是编译出了和你无关的代码而已</li>
