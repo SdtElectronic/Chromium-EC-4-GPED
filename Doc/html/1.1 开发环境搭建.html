@@ -1,10 +1,11 @@
-
+<h1>1.1 开发环境搭建</h1>
 本节参考官方文档<a href = "https://www.chromium.org/chromium-os/ec-development/getting-started-building-ec-images-quickly">getting started building ec images quickly</a>编写
+本节介绍搭建ec开发环境的两种方式，后一种对于绝大多数人而言是不必要的。
 <h2>首先，你得有个Linux</h2>
     <ul>
         <li>毫不意外地，这样一个开源项目需要在Linux环境中构建；也同样毫不意外地，大概会有很多人直接被这个需求劝退（</li>
-        <li>在你因认为浪费了阅读前两节的时间而愤然准备右上角之前，也许可以考虑用<a href = "http://www.mingw.org/">MinGw</a>或者<a href= "https://docs.microsoft.com/en-us/windows/wsl/install-win10">WSL</a>抢救一下，因为编译只需要CLI就够了，至于会不会有兼容性等玄学问题，首先我并没有试过.jpg（</li>
-        <li>Google官方推荐的Linux版本是Ubuntu 15.10，我在Debian testing(4.20)上测试可以无问题工作</li>
+        <li>在你因认为浪费了阅读前两节的时间而愤然准备右上角之前，也许可以考虑用<a href = "http://www.mingw.org/">MinGw</a>或者<a href= "https://docs.microsoft.com/en-us/windows/wsl/install-win10">WSL</a>抢救一下，因为编译只需要CLI就够了，至于会不会有兼容性等玄学问题，<del>首先我并没有试过.jpg（</del></li>
+        <li>Google官方推荐的Linux版本是Ubuntu 16.04（这个上古版本在一个上古文档里被提及，我不确定现在还是否有效），我在Debian testing(4.20)上测试可以无问题工作</li>
         <li>当然在Linux上交叉编译少不了一堆的依赖，对于Debian这样初始比较纯净的系统更是如此。希望你对apt还比较熟悉以解决可能出现的玄学问题（</li>
     </ul>
 <h2>快速开始，最简开发环境</h2>
@@ -18,21 +19,29 @@
         <li><code>sudo aptitude install repo pkg-config gawk</code></li>
         <li>当然由于环境差异，可能上面的命令不能修补所有必要的依赖。你可能需要根据错误输出来自己进行一些修补</li>
         <li>你还需要一个coreboot-sdk来获得arm-eabi-gcc的支持，很可惜这个sdk只能通过执行下一段的操作得到</li>
-        <li>预料到读完上一行会让你暗骂我坑爹，所以我把自己配置好的coreboot-sdk打包成了zip，你可以从<a>这里</a>下载</li>
+        <li>预料到读完上一行会让你暗骂我坑爹，所以我把自己配置好的coreboot-sdk打包成了zip：<a href = "https://pan.baidu.com/s/1OlINN3SiPlraNYDyPn8O0Q">v5yp</a></li>
         <li>解压得到cross-sdk这个文件夹后，<code>sudo mv ./cross-sdk /opt</code>以将其移动到根文件系统的opt目录下</li>
         <li>当然你还需要整个EC框架的源码，<del>除非你想虚空编译</del> 选一个你心仪的工程目录，然后<code>git clone https://github.com/coreboot/chrome-ec.git</code></li>
-        <li>如果你运气够好，进入刚刚clone下来的ec目录，执行<code>make BOARD=eve</code>，你会在执行时打印出的最后一行看到 ，而不是什么奇怪的报错</li>
-        <li>现在你可以在 下找到刚刚编译出来的二进制了，来之不易！然而这并没有什么卵用，你只是编译出了和你无关的代码而已</li>
+        <li>如果你运气够好，进入刚刚clone下来的ec目录，执行<code>make BOARD=eve</code>，你会在终端打印出的最后一行看到</br><code>
+                *** 82336 bytes in flash and 224 bytes in RAM still available on eve RO ****</br>
+                *** 82688 bytes in flash and 224 bytes in RAM still available on eve RW ****
+            </code> </br>，而不是什么奇怪的报错</li>
+        <li>现在你可以在./build/eve下找到刚刚编译出来的二进制了，来之不易！然而这并没有什么卵用，你只是编译出了和你无关的代码而已</li>
         <li>但为了让以后你写的真正有用的代码可以运行，你会一次次重复刚才的编译过程</li>
-        <li>顺带一提，在<code>make</code>指令后加上<code>-j$ </code>可以提高编译速度。例如你的cpu是4c8t的，你就可以骄傲地加一个-j8（</li>
+        <li>顺带一提，在<code>make</code>指令后加上<code>-j$number of cores on your workstatsion</code>可以提高编译速度。例如你的cpu是4c8t的，你就可以骄傲地加一个-j8（</li>
     </ul>
-<h2>利用chromiumOS chroot完整构建EC</h2>
+<h2>利用ChromiumOS chroot完整构建EC</h2>
     <ul>
-        <li>TIPS：除非</li>
+        <li>TIPS：除非在最简开发环境下编译出现了依赖问题，而你认为这个依赖仅存在于ChromiumOS中，否则构建一个ChromiumOS chroot进行EC开发是完全不必要的</li>
         <li>写到这我发现第一段的标题得改成“首先你得懂Linux”</li>
         <li><del>为了防止这样会劝退更多的人我还是没去改（</del></li>
-        <li>TIPSx2：从零开始构建chromium chroot对于大多数人来说将会是漫长而煎熬，甚至根本无法完成的</li>
-        <li>TIPSx2continue：所以我也准备了一个<a>构建好的chroot</a>供你直接下载</li>
-        <li>TIPSx3：如果看到这里也不能阻止你执意自己构建chroot，那么原谅我给你最后一击：如果你不能肉身翻墙或者没有bash下也有效的全局代理，请直接放弃</li>
-        
+        <li>作为Chromebook固件的一部分，毫不意外地EC本来应该在chromeOS环境下构建</li>
+        <li>当然为了写个嵌入式程序还要新装一个系统未免也太魔幻了，显然Chromebook团队也是这么想的，于是他们通过chroot提供了一个模拟chromiumOS环境的方法</li>
+        <li>TIPSx2：从零开始构建chromiumOS chroot对于大多数人来说将会是漫长而煎熬，甚至根本无法完成的</li>
+        <li>TIPSx2continue：所以我也准备了一个构建好的chroot供你直接下载：<a href = ""></a>现在你可以跳到后一步查看如何进入chroot</li>
+        <li>TIPSx3：如果看到这里也不能阻止你执意自己构建chroot，那么原谅我给你最后一击：如果你没有bash下也有效的全局代理或者其他能访问到某不存在网站的骚操作，请直接放弃</li>
+        <li>按<a href = "https://chromium.googlesource.com/chromiumos/docs/+/master/developer_guide.md">Chromium OS Developer's Guide</a>构建Chromium OS chroot</li>
+        <li>构建完成或者下载并解压好我提供的chroot后，进入目录下执行<code>./chromite/bin/cros_sdk</code></li>
+        <li>将$board替换为需要编译的工程，如eve，执行<code>cd ~/trunk/src/platform/ec; make BOARD=$board -j</code></li>
+        <li><code>cd /build/$board</code>，现在你可以看到编译出来的二进制</li>
     </ul>
